@@ -1,0 +1,258 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, rgb(126, 16, 71) 0%, rgb(47, 4, 13) 100%) !important;
+  color: #ffffff;
+  min-height: 100vh;
+}
+
+.App, #root, body {
+  background: linear-gradient(135deg, rgb(126, 16, 71) 0%, rgb(47, 4, 13) 100%) !important;
+  min-height: 100vh;
+}
+
+/* Remove any gradient backgrounds from individual pages */
+.glass-container, .glass-card, .card, .feature-card {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.36);
+}
+
+/* Navbar Styles */
+.navbar {
+  background: rgba(0, 0, 0, 0.8) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-brand {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #ffffff !important;
+}
+
+.nav-btn {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 10px 20px;
+  border-radius: 25px;
+  cursor: pointer;
+  margin-left: 10px;
+  transition: all 0.3s ease;
+}
+
+.nav-btn:hover {
+  background: rgba(255, 255, 255, 0.12) !important;
+}
+
+/* Button Styles */
+.btn {
+  background: linear-gradient(135deg, #7e1047 0%, #2f040d 100%) !important;
+  color: #ffffff;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 1rem;
+  margin: 10px 5px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(126, 16, 71, 0.5);
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.12) !important;
+}
+
+/* Landing Page */
+.hero {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #ffffff;
+  background: transparent !important;
+}
+
+.hero h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  color: #ffffff !important;
+}
+
+.hero p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  color: #e0e0e0;
+}
+
+.features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.feature-card {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 2rem;
+  border-radius: 16px;
+  transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+  background: rgba(255, 255, 255, 0.12) !important;
+}
+
+/* Form Styles */
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.form-group input, .form-group select, .form-group textarea {
+  width: 100%;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  font-size: 1rem;
+  color: #ffffff;
+}
+
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+  outline: none;
+  border-color: #ffffff;
+}
+
+.form-group input::placeholder {
+  color: #b0b0b0;
+}
+
+/* Dashboard & Loan Items */
+.loan-item {
+  border-left: 4px solid #7e1047;
+  padding: 1.5rem;
+  margin: 1rem 0;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.status-pending {
+  color: #ffd700;
+  font-weight: bold;
+}
+
+.status-paid {
+  color: #00ff88;
+  font-weight: bold;
+}
+
+/* Container */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background: transparent !important;
+}
+
+/* Text Colors */
+h1, h2, h3, h4, h5, h6 {
+  color: #ffffff !important;
+}
+
+p {
+  color: #e0e0e0;
+}
+
+/* Links */
+a {
+  color: #ffffff !important;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #ffd700 !important;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #2f040d;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(126, 16, 71, 0.6);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(126, 16, 71, 0.8);
+}
+/* FORCE BACKGROUND ON ALL ELEMENTS - ADD THIS AT THE END */
+div[style*="background"] {
+  background: linear-gradient(135deg, rgb(126, 16, 71) 0%, rgb(47, 4, 13) 100%) !important;
+}
+
+div[style*="gradient"] {
+  background: linear-gradient(135deg, rgb(126, 16, 71) 0%, rgb(47, 4, 13) 100%) !important;
+}
+
+body, html, #root, .App {
+  background: linear-gradient(135deg, rgb(126, 16, 71) 0%, rgb(47, 4, 13) 100%) !important;
+}
+/* ===== ADD THIS AT THE VERY END OF App.css ===== */
+
+/* Make expense history and participant names white */
+.expense-history, 
+.participants-list,
+.expense-details,
+.expense-item {
+  color: #ffffff !important;
+} 
+
+/* Make all text in cards white */
+.card *,
+.glass-card *,
+.glass-container *,
+.feature-card * {
+  color: #ffffff !important;
+}
+
+/* Make sure all text is visible on dark background */
+div, p, span, h1, h2, h3, h4, h5, h6 {
+  color: #ffffff !important;
+}
+
+/* Specific for any lists or participant names */
+li, ul, ol {
+  color: #ffffff !important;
+}
