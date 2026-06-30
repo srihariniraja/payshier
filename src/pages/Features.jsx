@@ -17,32 +17,25 @@ function Features({ goTo }) {
       action: () => goTo('splitexpenses')
     },
     {
-  icon: '📅',
-  title: 'Timeline & Calendar',
-  description: 'Track all your contracts with calendar view and timeline history. Never miss a due date.',
-  buttonText: 'View Timeline',
-  action: () => goTo('timeline')
-},
-    {
-      icon: '🔔',
-      title: 'Smart Reminders',
-      description: 'Never miss a payment deadline. Automated alerts for borrowers and lenders.',
-      buttonText: 'Set Reminders',
-      action: () => alert('Smart Reminders feature coming soon!')
+      icon: '📅',
+      title: 'Timeline & Calendar',
+      description: 'Track all your contracts with calendar view and timeline history. Never miss a due date.',
+      buttonText: 'View Timeline',
+      action: () => goTo('timeline')
     },
     {
-      icon: '🛡️',
-      title: 'Secure & Private',
-      description: 'Bank-level security for your financial data. Your information stays private.',
-      buttonText: 'View Security',
-      action: () => alert('Security details shown!')
+      icon: '⏰',
+      title: 'Bill Reminder & Tracker',
+      description: 'Track bills (rent, utilities, subscriptions) with due dates and get smart reminders before deadlines.',
+      buttonText: 'Manage Bills',
+      action: () => goTo('billtracker')
     },
     {
       icon: '📊',
-      title: 'Financial Insights',
-      description: 'Visual reports on your lending patterns and financial relationships.',
+      title: 'Spending Insight',
+      description: 'Track, analyze, and optimize your spending with visual reports and smart budgeting tools.',
       buttonText: 'See Analytics',
-      action: () => alert('Financial Insights dashboard coming soon!')
+      action: () => goTo('spendinginsights')
     }
   ]
 
@@ -64,15 +57,24 @@ function Features({ goTo }) {
         <div style={{
           fontSize: '1.8rem',
           fontWeight: 'bold',
-          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent'
+          color: 'white',
+          background: 'linear-gradient(135deg, #7e1047 0%, #2f040d 100%)',
+          padding: '10px 20px',
+          borderRadius: '10px',
+          boxShadow: '0 4px 15px rgba(126, 16, 71, 0.4)'
         }}>
           PAYSHIER Features
         </div>
+        
         <div>
           <button style={navButtonStyle} onClick={() => goTo('dashboard')}>Go to Dashboard</button>
-          <button style={navButtonStyle} onClick={() => goTo('home')}>Logout</button>
+          <button style={profileButtonStyle} onClick={() => goTo('profile')}>
+            👤 Profile
+          </button>
+          <button style={navButtonStyle} onClick={() => {
+            localStorage.removeItem('currentUser');
+            goTo('home');
+          }}>Logout</button>
         </div>
       </nav>
 
@@ -181,43 +183,6 @@ function Features({ goTo }) {
             </div>
           ))}
         </div>
-
-        <div style={{
-          background: 'rgba(255,255,255,0.95)',
-          backdropFilter: 'blur(10px)',
-          padding: '3rem',
-          borderRadius: '20px',
-          textAlign: 'center',
-          boxShadow: '0 10px 30px rgba(0,0,0,0.2)',
-          border: '1px solid rgba(255,255,255,0.3)'
-        }}>
-          <h2 style={{ 
-            marginBottom: '1rem', 
-            color: '#333',
-            fontSize: '2.2rem'
-          }}>
-            Ready to Get Started?
-          </h2>
-          <p style={{ 
-            marginBottom: '2rem', 
-            color: '#666',
-            fontSize: '1.2rem'
-          }}>
-            Join thousands who trust PAYSHIER for their informal financial needs
-          </p>
-          <button 
-            style={{ 
-              ...primaryButtonStyle,
-              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-              padding: '15px 40px',
-              fontSize: '1.2rem',
-              borderRadius: '25px'
-            }}
-            onClick={() => goTo('dashboard')}
-          >
-            Launch Dashboard
-          </button>
-        </div>
       </div>
     </div>
   )
@@ -234,15 +199,15 @@ const navButtonStyle = {
   marginLeft: '10px'
 }
 
-const primaryButtonStyle = {
-  background: 'linear-gradient(135deg, #28a745 0%, #20c997 100%)',
+const profileButtonStyle = {
+  background: 'linear-gradient(135deg, #17a2b8 0%, #138496 100%)',
   color: 'white',
   border: 'none',
-  padding: '12px 24px',
-  borderRadius: '25px',
+  padding: '10px 20px',
+  borderRadius: '5px',
   cursor: 'pointer',
   fontWeight: 'bold',
-  boxShadow: '0 4px 15px rgba(40, 167, 69, 0.4)'
+  marginLeft: '10px'
 }
 
 export default Features

@@ -11,6 +11,10 @@ import LendingPage from './pages/LendingPage'
 import DigitalContractsPage from './pages/DigitalContractspage'
 import ContractReview from './pages/ContractReview'
 import TimelinePage from './pages/TimelinePage'
+import BillTracker from './pages/BillTracker' 
+import SpendingInsights from './pages/SpendingInsights'
+import ExpenseForm from './pages/ExpenseForm'
+import ProfilePage from './pages/ProfilePage';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home')
@@ -37,6 +41,10 @@ function App() {
       case 'digitalcontracts': return <DigitalContractsPage goTo={handleNavigation} />
       case 'contractreview': return <ContractReview goTo={handleNavigation} formData={pageData} />
       case 'timeline': return <TimelinePage goTo={handleNavigation} />
+      case 'billtracker': return <BillTracker goTo={handleNavigation} />
+      case 'spendinginsights': return <SpendingInsights goTo={handleNavigation} />
+      case 'addexpense': return <ExpenseForm goTo={handleNavigation} />
+      case 'profile': return <ProfilePage goTo={handleNavigation} />
       default: return <Home goTo={handleNavigation} />
     }
   }

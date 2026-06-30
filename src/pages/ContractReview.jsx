@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
-import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 function ContractReview({ goTo, formData }) {
   console.log('Form Data received:', formData);
@@ -10,7 +10,57 @@ function ContractReview({ goTo, formData }) {
   const [lenderSignature, setLenderSignature] = useState(null);
   const [borrowerSignature, setBorrowerSignature] = useState(null);
   const contractRef = useRef();
+   
+  const generateAndSavePDF = async () => {
+  try {
+    // Hide signature drawing pads (including buttons) before capturing
+    const signaturePads = document.querySelectorAll('[data-signature-pad]');
+    const originalDisplay = [];
+    
+    signaturePads.forEach((pad, index) => {
+      originalDisplay[index] = pad.style.display;
+      pad.style.display = 'none';
+    });
 
+    const element = contractRef.current;
+    
+    const canvas = await html2canvas(element, {
+      backgroundColor: null,
+      scale: 2,
+      useCORS: true,
+      logging: false,
+    });
+
+    const imgData = canvas.toDataURL('image/png');
+    
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+    
+    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+    
+    // ✅ JUST DOWNLOAD THE PDF - DON'T SAVE TO LOCALSTORAGE
+    pdf.save(`contract-${processedContractData.contractId}.pdf`);
+
+    // Restore the signature pads
+    signaturePads.forEach((pad, index) => {
+      pad.style.display = originalDisplay[index];
+    });
+    
+    return true;
+  } catch (error) {
+    console.error('Error generating PDF:', error);
+    
+    // Restore signature pads even if there's an error
+    const signaturePads = document.querySelectorAll('[data-signature-pad]');
+    signaturePads.forEach((pad, index) => {
+      pad.style.display = 'block';
+    });
+    
+    return false;
+  }
+};
+  
   // Process the form data with the actual values
   const processedContractData = formData ? {
     lenderName: formData.loanType === 'lending' ? formData.personName : formData.otherPartyName,
@@ -31,6 +81,52 @@ function ContractReview({ goTo, formData }) {
     returnDate: "Not provided",
     contractId: "CNTR" + Date.now()
   };
+
+  // UPDATED PDF GENERATION FUNCTION - HIDES SIGNATURE PADS AND BUTTONS
+ const saveAsPendingContract = async () => {
+  try {
+    // 1. Generate and download PDF first
+    const pdfGenerated = await generateAndSavePDF();
+    
+    if (!pdfGenerated) {
+      alert('Failed to generate PDF contract!');
+      return;
+    }
+    
+    // 2. THEN save contract data
+    const pendingContract = {
+      contractId: processedContractData.contractId,
+      lender: processedContractData.lenderName,
+      borrower: processedContractData.borrowerName,
+      amount: processedContractData.amount,
+      purpose: processedContractData.purpose,
+      agreementDate: processedContractData.agreementDate,
+      returnDate: processedContractData.returnDate,
+      status: 'pending',
+      lenderSigned: lenderSigned,
+      borrowerSigned: borrowerSigned,
+      lenderSignature: lenderSignature,
+      borrowerSignature: borrowerSignature,
+      createdAt: new Date().toISOString(),
+      approvals: {
+        lender: false,
+        borrower: false
+      }
+    };
+
+    const existingContracts = JSON.parse(localStorage.getItem('payshier-pending-contracts') || '[]');
+    const updatedContracts = [...existingContracts, pendingContract];
+    localStorage.setItem('payshier-pending-contracts', JSON.stringify(updatedContracts));
+
+    console.log('Contract saved as pending:', pendingContract);
+    
+    alert('Contract saved as pending! Both parties need to approve it. PDF has been downloaded.');
+    goTo('features');
+  } catch (error) {
+    console.error('Error saving contract:', error);
+    alert('Error saving contract. Please try again.');
+  }
+};
 
   // Signature Canvas Components
   const LenderSignaturePad = () => {
@@ -215,41 +311,6 @@ function ContractReview({ goTo, formData }) {
     );
   };
 
-  // UPDATED PDF GENERATION FUNCTION - HIDES SIGNATURE PADS AND BUTTONS
-  const generatePDF = async () => {
-    // Hide signature drawing pads (including buttons) before capturing
-    const signaturePads = document.querySelectorAll('[data-signature-pad]');
-    const originalDisplay = [];
-    
-    signaturePads.forEach((pad, index) => {
-      originalDisplay[index] = pad.style.display;
-      pad.style.display = 'none';
-    });
-
-    const element = contractRef.current;
-    
-    const canvas = await html2canvas(element, {
-      backgroundColor: null,
-      scale: 2,
-      useCORS: true,
-      logging: false,
-    });
-
-    const imgData = canvas.toDataURL('image/png');
-    
-    const pdf = new jsPDF('p', 'mm', 'a4');
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-    
-    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-    pdf.save('loan-agreement-contract.pdf');
-
-    // Restore the signature pads
-    signaturePads.forEach((pad, index) => {
-      pad.style.display = originalDisplay[index];
-    });
-  };
-
   const canGeneratePDF = lenderSigned && borrowerSigned && lenderSignature && borrowerSignature;
 
   return (
@@ -258,30 +319,37 @@ function ContractReview({ goTo, formData }) {
       padding: '20px',
       backgroundColor: '#f8f9fa'
     }}>
-       {/* ✅ ADD BACK BUTTON HERE */}
-    <button 
-      onClick={() => goTo('features')}
-      style={{
-        background: '#6c757d',
-        color: 'white',
-        border: 'none',
-        padding: '10px 20px',
-        borderRadius: '25px',
-        cursor: 'pointer',
-        fontWeight: 'bold',
-        marginBottom: '20px'
-      }}
-    >
-      ← Back to Features
-    </button>
-      <div ref={contractRef} style={{
-        backgroundColor: 'white',
-        padding: '20px',
-        borderRadius: '10px',
-        boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
-        maxWidth: '800px',
-        margin: '0 auto'
-      }}>
+      <button 
+        onClick={() => goTo('features')}
+        style={{
+          background: '#6c757d',
+          color: 'white',
+          border: 'none',
+          padding: '10px 20px',
+          borderRadius: '25px',
+          cursor: 'pointer',
+          fontWeight: 'bold',
+          marginBottom: '20px'
+        }}
+      >
+        ← Back to Features
+      </button>
+      
+      {/* CONTRACT CONTENT - ONLY ONE VERSION */}
+      <div 
+        ref={contractRef} 
+        style={{
+          backgroundColor: 'white',
+          padding: '20px',
+          borderRadius: '10px',
+          boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+          maxWidth: '800px',
+          margin: '0 auto',
+          width: '794px',
+          minHeight: '1123px',
+          boxSizing: 'border-box'
+        }}
+      >
         <h1 style={{ textAlign: 'center', color: '#333', marginBottom: '30px' }}>
           Loan Agreement Contract
         </h1>
@@ -348,7 +416,7 @@ function ContractReview({ goTo, formData }) {
       <div style={{ textAlign: 'center', marginTop: '30px' }}>
         {canGeneratePDF ? (
           <button
-            onClick={generatePDF}
+            onClick={saveAsPendingContract}
             style={{
               background: '#339af0',
               color: 'white',
@@ -360,7 +428,7 @@ function ContractReview({ goTo, formData }) {
               fontWeight: 'bold'
             }}
           >
-            Generate PDF Contract
+            Save as Pending Contract
           </button>
         ) : (
           <p style={{ color: '#868e96' }}>

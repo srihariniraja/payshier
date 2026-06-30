@@ -13,6 +13,12 @@ function CreateLoan({ goTo }) {
   })
   const [errors, setErrors] = useState({})
 
+// GET ALL PAYSHIER ACCOUNTS
+const getPayshierAccounts = () => {
+  const accounts = JSON.parse(localStorage.getItem('payshierAccounts') || '[]');
+  return accounts;
+};
+
   const validateStep1 = () => {
     const newErrors = {}
     if (!formData.personName.trim()) newErrors.personName = 'Person name is required'
@@ -184,52 +190,68 @@ console.log('✅ Current transactions after save:', JSON.parse(checkData));
         {step === 1 && (
           <div>
             <div style={{ marginBottom: '1.5rem' }}>
-              <label style={{ color: 'white', display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
-                {labels.personLabel}
-              </label>
-              <input
-                type="text"
-                name="personName"
-                value={formData.personName}
-                onChange={handleChange}
-                required
-                style={{
-                  width: '100%',
-                  padding: '12px',
-                  background: 'rgba(255, 255, 255, 0.1)',
-                  border: errors.personName ? '1px solid red' : '1px solid rgba(255, 255, 255, 0.3)',
-                  borderRadius: '10px',
-                  color: 'white',
-                  fontSize: '1rem'
-                }}
-                placeholder="Enter your name"
-              />
-              {errors.personName && <span style={{ color: '#ff6b6b', fontSize: '0.9rem' }}>{errors.personName}</span>}
-            </div>
+  <label style={{ color: 'white', display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
+    {labels.personLabel}
+  </label>
+  <input
+    type="text"
+    name="personName"
+    value={formData.personName}
+    onChange={handleChange}
+    list="userAccounts"
+    required
+    style={{
+      width: '100%',
+      padding: '12px',
+      background: 'rgba(255, 255, 255, 0.1)',
+      border: errors.personName ? '1px solid red' : '1px solid rgba(255, 255, 255, 0.3)',
+      borderRadius: '10px',
+      color: 'white',
+      fontSize: '1rem'
+    }}
+    placeholder="Type or select your username"
+  />
+  <datalist id="userAccounts">
+    {getPayshierAccounts().map((account, index) => (
+      <option key={index} value={account.email}>
+        {account.name}
+      </option>
+    ))}
+  </datalist>
+  {errors.personName && <span style={{ color: '#ff6b6b', fontSize: '0.9rem' }}>{errors.personName}</span>}
+</div>
 
             <div style={{ marginBottom: '1.5rem' }}>
-              <label style={{ color: 'white', display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
-                {labels.otherPartyLabel}
-              </label>
-              <input
-                type="text"
-                name="otherPartyName"
-                value={formData.otherPartyName}
-                onChange={handleChange}
-                required
-                style={{
-                  width: '100%',
-                  padding: '12px',
-                  background: 'rgba(255, 255, 255, 0.1)',
-                  border: errors.otherPartyName ? '1px solid red' : '1px solid rgba(255, 255, 255, 0.3)',
-                  borderRadius: '10px',
-                  color: 'white',
-                  fontSize: '1rem'
-                }}
-                placeholder={formData.loanType === 'lending' ? "Enter borrower's name" : "Enter lender's name"}
-              />
-              {errors.otherPartyName && <span style={{ color: '#ff6b6b', fontSize: '0.9rem' }}>{errors.otherPartyName}</span>}
-            </div>
+  <label style={{ color: 'white', display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
+    {labels.otherPartyLabel}
+  </label>
+  <input
+    type="text"
+    name="otherPartyName"
+    value={formData.otherPartyName}
+    onChange={handleChange}
+    list="userAccounts"
+    required
+    style={{
+      width: '100%',
+      padding: '12px',
+      background: 'rgba(255, 255, 255, 0.1)',
+      border: errors.otherPartyName ? '1px solid red' : '1px solid rgba(255, 255, 255, 0.3)',
+      borderRadius: '10px',
+      color: 'white',
+      fontSize: '1rem'
+    }}
+    placeholder={`Type or select ${formData.loanType === 'lending' ? "borrower's" : "lender's"} username`}
+  />
+  <datalist id="userAccounts">
+    {getPayshierAccounts().map((account, index) => (
+      <option key={index} value={account.email}>
+        {account.name}
+      </option>
+    ))}
+  </datalist>
+  {errors.otherPartyName && <span style={{ color: '#ff6b6b', fontSize: '0.9rem' }}>{errors.otherPartyName}</span>}
+</div>
 
             <div style={{ marginBottom: '1.5rem' }}>
               <label style={{ color: 'white', display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>

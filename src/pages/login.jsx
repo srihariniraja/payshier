@@ -15,19 +15,47 @@ function Login({ goTo }) {
     setError('')
 
     if (isLogin) {
-      // Check credentials
-      if (formData.email === 'user1' && formData.password === '123456') {
+      // LOGIN: Check if account exists in payshier-users
+      const users = JSON.parse(localStorage.getItem('payshier-users') || '[]')
+      const account = users.find(acc => acc.email === formData.email && acc.password === formData.password)
+      
+      if (account) {
+        // Save current user session
+        localStorage.setItem('currentUser', JSON.stringify({
+          email: formData.email,
+          name: account.name,
+          username: account.name
+        }))
         goTo('features')
       } else {
         setError('Wrong username or password!')
       }
     } else {
-      // Signup logic
+      // SIGNUP: Save new account
       if (formData.password !== formData.confirmPassword) {
         setError('Passwords do not match!')
         return
       }
-      console.log('Signing up:', formData)
+
+      // Check if email already exists
+      const users = JSON.parse(localStorage.getItem('payshier-users') || '[]')
+      const emailExists = users.some(user => user.email === formData.email)
+      if (emailExists) {
+        setError('Email already exists!')
+        return
+      }
+
+      // Create new user with creation date
+      const newUser = {
+        name: formData.name,
+        username: formData.name,
+        email: formData.email,
+        password: formData.password,
+        createdAt: new Date().toISOString()
+      }
+      
+      users.push(newUser)
+      localStorage.setItem('payshier-users', JSON.stringify(users))
       setIsLogin(true)
       setError('Account created! Please login.')
     }
